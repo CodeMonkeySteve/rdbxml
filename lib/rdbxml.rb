@@ -38,7 +38,7 @@ module RDBXML
   end
 end
 
-# Wraps and extends the XmlValue[http://www.sleepycat.com/xmldocs/api_cxx/XmlValue.html] class.
+# Wraps and extends the XmlValue[http://www.oracle.com/technology/documentation/berkeley-db/xml/api_cxx/XmlValue_list.html] class.
 # === Aliases:
 # to_s::   asString
 # to_f::   asNumber
@@ -61,7 +61,7 @@ class Dbxml::XmlValue
   end
 end
 
-# Wraps the XmlResults[http://www.sleepycat.com/xmldocs/api_cxx/XmlResults_list.html] class as an
+# Wraps the XmlResults[http://www.oracle.com/technology/documentation/berkeley-db/xml/api_cxx/XmlResults_list.html] class as an
 # enumerable collection of XmlValue or XmlDocument.
 class Dbxml::XmlResults
   include Enumerable
@@ -100,28 +100,30 @@ class Dbxml::XmlResults
   end
 end
 
-# Wraps and extends the XmlQueryContext[http://www.sleepycat.com/xmldocs/api_cxx/XmlQueryContext_list.html] class.
+# Wraps and extends the XmlQueryContext[http://www.oracle.com/technology/documentation/berkeley-db/xml/api_cxx/XmlQueryContext_list.html] class.
 # === Aliases
-# namespace::   getNamespace/setNamespace[http://www.sleepycat.com/xmldocs/api_cxx/XmlQueryContext_setNamespace.html]
-# collection::  getDefaultCollection/setDefaultCollection[http://www.sleepycat.com/xmldocs/api_cxx/XmlQueryContext_setDefaultCollection.html]
+# namespace::   getNamespace/setNamespace[http://www.oracle.com/technology/documentation/berkeley-db/xml/api_cxx/XmlQueryContext_setNamespace.html]
+# collection::  getDefaultCollection/setDefaultCollection[http://www.oracle.com/technology/documentation/berkeley-db/xml/api_cxx/XmlQueryContext_setDefaultCollection.html]
 class Dbxml::XmlQueryContext
-  # XmlQueryContext::getVariableValue[http://www.sleepycat.com/xmldocs/api_cxx/XmlQueryContext_setVariableValue.html]
+  # XmlQueryContext::getVariableValue[http://www.oracle.com/technology/documentation/berkeley-db/xml/api_cxx/XmlQueryContext_setVariableValue.html]
   def []( name )
     getVariableValue name.to_s
   end
-  # XmlQueryContext::setVariableValue[http://www.sleepycat.com/xmldocs/api_cxx/XmlQueryContext_setVariableValue.html]
+
+  # XmlQueryContext::setVariableValue[http://www.oracle.com/technology/documentation/berkeley-db/xml/api_cxx/XmlQueryContext_setVariableValue.html]
   def []=( name, val ) # :nodoc:
     setVariableValue name.to_s, Dbxml::XmlValue.new(val)
   end
 end
 
-# Wraps and extends the XmlDocument[http://www.sleepycat.com/xmldocs/api_cxx/XmlDocument_list.html] class.
+# Wraps and extends the XmlDocument[http://www.oracle.com/technology/documentation/berkeley-db/xml/api_cxx/XmlDocument_list.html] class.
 # === Aliases:
-# name:: getName/setName[http://www.sleepycat.com/xmldocs/api_cxx/XmlDocument_setName.html]
-# content:: getContent/setContent[http://www.sleepycat.com/xmldocs/api_cxx/XmlDocument_getContent.html]
+# name:: getName/setName[http://www.oracle.com/technology/documentation/berkeley-db/xml/api_cxx/XmlDocument_setName.html]
+# content:: getContent/setContent[http://www.oracle.com/technology/documentation/berkeley-db/xml/api_cxx/XmlDocument_getContent.html]
 # to_s:: #content
 class Dbxml::XmlDocument
-  # Represents the document metadata as an Enumerable collection
+  # Represents the document metadata[http://www.oracle.com/technology/documentation/berkeley-db/xml/api_cxx/XmlDocument_getMetaData.html]
+  # as an Enumerable collection
   class MetaData
     include Enumerable
 
@@ -171,16 +173,16 @@ class Dbxml::XmlDocument
     end
   end
 
-  # Returns the document metadata[http://www.sleepycat.com/xmldocs/api_cxx/XmlDocument_getMetaData.html]
+  # Returns the document metadata
   def meta
     @Meta ||= MetaData.new(self)
   end
 
 end
 
-# Wraps and extends the XmlContainer[http://www.sleepycat.com/xmldocs/api_cxx/XmlContainer_list.html] class.
+# Wraps and extends the XmlContainer[http://www.oracle.com/technology/documentation/berkeley-db/xml/api_cxx/XmlContainer_list.html] class.
 # === Aliases
-# manager:: getManager[http://www.sleepycat.com/xmldocs/api_cxx/XmlContainer_getManager.html]
+# manager:: getManager[http://www.oracle.com/technology/documentation/berkeley-db/xml/api_cxx/XmlContainer_getManager.html]
 class Dbxml::XmlContainer
   include Enumerable
 
@@ -228,9 +230,9 @@ class Dbxml::XmlContainer
   end
 end
 
-# Wraps and extends the XmlManager[http://www.sleepycat.com/xmldocs/api_cxx/XmlManager_list.html] class.
+# Wraps and extends the XmlManager[http://www.oracle.com/technology/documentation/berkeley-db/xml/api_cxx/XmlManager_list.html] class.
 # === Aliases
-# create_query_context:: createQueryContext
+# create_query_context:: createQueryContext[http://www.oracle.com/technology/documentation/berkeley-db/xml/api_cxx/XmlManager_createQueryContext.html]
 class Dbxml::XmlManager
   # Opens the container named +name+, creating it if it doesn't exist.
   def []( name )

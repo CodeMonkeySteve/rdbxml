@@ -8,9 +8,7 @@ require 'rake/contrib/rubyforgepublisher'
 require 'fileutils'
 
 GEM_VERSION = '2.4.13.2'
-
 ifacedir = File.join( File.dirname(__FILE__), 'ext' )
-
 Rake::ExtensionTask.env[:swig_includedirs] << ifacedir
 
 desc "Build the interface extension"
@@ -35,7 +33,7 @@ task :install => [:test, :clean] do end
 
 docs = Rake::RDocTask.new :rdoc do |rdoc|
   rdoc.rdoc_dir = 'html'
-  rdoc.title    = "RDBXML -- XML Databases for Ruby"
+  rdoc.title    = "RDBXML -- XML Database for Ruby"
   rdoc.options += ['--line-numbers', '--inline-source', '--main', 'README', '--exclude', 'ext/*.c*']
   rdoc.rdoc_files.include 'README', 'MIT-LICENSE'
   rdoc.rdoc_files.include 'lib/**/*.rb'
@@ -56,13 +54,13 @@ spec = Gem::Specification.new do |s|
   s.version = GEM_VERSION
   s.date = Date.today.to_s
   s.authors = ["Steve Sloan"]
-  s.summary = 'Ruby interface to Oracle DBXML databse'
-  s.description = 'Provides wrappers for the BDB XML C++ APIs, plus pure Ruby extensions'
-  s.files = GEM_FILES.to_a.delete_if {|f| f.include?('.svn')}
+  s.summary = 'Ruby interface to the Berkeley DB XML database'
+  s.description = 'Provides wrappers for the Oracle Berkeley DB XML C++ API, plus pure Ruby extensions'
+  s.files = GEM_FILES.to_a
   s.autorequire = 'rdbxml'
   s.test_files = Dir["test/test_*.rb"]
   s.add_dependency 'rake', '> 0.7.0'
-  s.add_dependency 'rake-tasks', '> 0.1'
+  s.add_dependency 'rake-tasks', '>= 0.2'
 
   s.extensions << './extconf.rb'
   s.require_paths << 'ext'

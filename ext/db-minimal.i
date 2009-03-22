@@ -53,7 +53,7 @@ public:
 	virtual int set_shm_key(long);
 	virtual int set_timeout(db_timeout_t, u_int32_t);
 	virtual int set_tmp_dir(const char *);
-	virtual int set_tas_spins(u_int32_t);
+	virtual int mutex_set_tas_spins(u_int32_t);
 	virtual int set_tx_max(u_int32_t);
 	virtual int set_verbose(u_int32_t which, int);
 

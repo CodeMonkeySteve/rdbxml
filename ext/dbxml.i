@@ -40,6 +40,10 @@ using namespace DbXml;
 #elif defined(SWIGPHP4)
 %include "std_string.i"
 %include "dbxml_php4.i"
+#elif defined(SWIGRUBY)
+%include "std_string.i"
+%include "std_except.i"
+%include "dbxml_ruby.i"
 #else
 #error "Unknown SWIG target language"
 #endif
@@ -50,7 +54,7 @@ class XmlIndexDeclaration {
 public:
 	XmlIndexDeclaration() {}
 	XmlIndexDeclaration(const std::string &uri, const std::string &name, const std::string &index) : uri(uri), name(name), index(index) {}
-#ifndef SWIGJAVA	
+#ifndef SWIGJAVA
 	const std::string &get_uri() const { return uri; }
 	const std::string &get_name() const { return name; }
 	const std::string &get_index() const { return index; }
@@ -63,7 +67,7 @@ public:
 	XmlMetaData() {}
 	XmlMetaData(const std::string &uri, const std::string &name, const
 		    XmlValue &value) : uri(uri), name(name), value(value) {}
-	
+
 	const std::string &get_uri() const { return uri; }
 	const std::string &get_name() const { return name; }
 	const XmlValue &get_value() const { return value; }
@@ -75,11 +79,11 @@ public:
 
 // DBXML_USEOVERLOADS -- defined when a language supports overloaded
 // functions.  If defined, the "OVERLOAD_NAME" macro is a no-op
-#if defined(SWIGJAVA) || defined(SWIGPYTHON) || defined(SWIGCSHARP) || defined(SWIGTCL8)
+#if defined(SWIGJAVA) || defined(SWIGPYTHON) || defined(SWIGCSHARP) || defined(SWIGTCL8) || defined(SWIGRUBY)
 #define DBXML_USEOVERLOADS
 #endif
 
-#if defined(SWIGJAVA) || defined(SWIGPYTHON)
+#if defined(SWIGJAVA) || defined(SWIGPYTHON) || defined(SWIGRUBY)
 #define DBXML_USE_RESOLVER
 #endif
 
@@ -126,20 +130,20 @@ class XmlResolver;
 #ifndef SWIGJAVA
 // For Java, this is done differently
 enum {
-	DB_CREATE, 
-	DB_READ_UNCOMMITTED, 
+	DB_CREATE,
+	DB_READ_UNCOMMITTED,
 	DB_DIRTY_READ,
-	DB_EXCL, 
-	DB_NOMMAP, 
-	DB_RDONLY, 
+	DB_EXCL,
+	DB_NOMMAP,
+	DB_RDONLY,
 	DB_THREAD,
-	DB_READ_COMMITTED, 
+	DB_READ_COMMITTED,
 	DB_DEGREE_2,
-	DB_INIT_LOCK, 
-	DB_INIT_LOG, 
-	DB_INIT_MPOOL, 
+	DB_INIT_LOCK,
+	DB_INIT_LOG,
+	DB_INIT_MPOOL,
 	DB_INIT_TXN,
-	DB_SALVAGE, 
+	DB_SALVAGE,
 	DB_AGGRESSIVE,
     	DB_TXN_SNAPSHOT,
 	DB_MULTIVERSION
@@ -226,7 +230,7 @@ void setLogLevel(enum LogLevel level, bool enabled) {
 		DbXml::setLogLevel(level, enabled)
 }
 void setLogCategory(enum LogCategory category, bool enabled) {
-		DbXml::setLogCategory(category, enabled)	
+		DbXml::setLogCategory(category, enabled)
 }
 #endif /* SWIGTCL8 */
 
@@ -252,11 +256,11 @@ void setLogCategory(enum LogCategory category, bool enabled) {
 %newobject XmlManager::openContainer(XmlTransaction &, const std::string &,
 				     u_int32_t);
 %newobject XmlManager::openContainer(XmlTransaction &, const std::string &,
-				     u_int32_t, 
+				     u_int32_t,
 				     enum XmlContainer::ContainerType,
 				     int mode = 0);
 %newobject XmlManager::openContainer(const std::string &,
-				     u_int32_t, 
+				     u_int32_t,
 				     enum XmlContainer::ContainerType,
 				     int mode = 0);
 %newobject XmlManager::createDocument();
@@ -291,7 +295,7 @@ void setLogCategory(enum LogCategory category, bool enabled) {
 
 %newobject XmlContainer::getIndexSpecification() const;
 %newobject XmlContainer::getIndexSpecification(XmlTransaction&) const;
-%newobject XmlContainer::getIndexSpecification(XmlTransaction&, 
+%newobject XmlContainer::getIndexSpecification(XmlTransaction&,
 					       u_int32_t flags) const;
 #ifdef SWIGJAVA
 %newobject XmlManager::createIndexLookupInternal(
@@ -299,7 +303,7 @@ void setLogCategory(enum LogCategory category, bool enabled) {
 %newobject XmlManager::createIndexLookup(
 #endif
 	XmlContainer &cont,
-	const std::string &uri, 
+	const std::string &uri,
 	const std::string &name,
 	const std::string &index,
 	const XmlValue &value = XmlValue(),
@@ -309,7 +313,7 @@ void setLogCategory(enum LogCategory category, bool enabled) {
 	XmlQueryContext &ctx, u_int32_t flags = 0) const;
 %newobject XmlIndexLookup::execute(
 	XmlTransaction &, XmlQueryContext &ctx, u_int32_t flags = 0) const;
-	
+
 #ifndef SWIGJAVA
 %newobject XmlContainer::getDocument(const std::string&);
 %newobject XmlContainer::getDocument(XmlTransaction&, const std::string&);
@@ -415,7 +419,7 @@ void setLogCategory(enum LogCategory category, bool enabled) {
 				       XmlQueryContext &) const;
 
 
-#if defined(SWIGPYTHON) || defined(SWIGPHP4)
+#if defined(SWIGPYTHON) || defined(SWIGPHP4) || defined(SWIGRUBY)
 %newobject XmlResults::next();
 %newobject XmlResults::previous();
 %newobject XmlResults::peek();
@@ -457,12 +461,12 @@ public:
 
 #ifndef SWIGJAVA
 	XmlManager();
-#endif	
+#endif
 #ifndef SWIGJAVA
 OVERLOAD_NAME(XmlManagerWithFlags)
 	XmlManager(u_int32_t flags);
 #endif
-OVERLOAD_NAME(XmlManagerFromEnv)	
+OVERLOAD_NAME(XmlManagerFromEnv)
 	XmlManager(DbEnv *dbEnv, u_int32_t flags);
 	~XmlManager();
 
@@ -535,7 +539,7 @@ OVERLOAD_NAME(renameContainerWithTxn)
 	// because the JNI layer copies the Java String, then
 	// releases it upon return, leaving an invalid buffer.
 	// It appears to work for Python
-	// 
+	//
 	XmlInputStream* createMemBufInputStream(
 		const char *bytes, const unsigned int count,
 		const char *id, const bool adopt = false) const {
@@ -545,7 +549,7 @@ OVERLOAD_NAME(renameContainerWithTxn)
 	}
 	// This form *always* adopts the buffer, copied or not
 	// It is supplied for use by Java, primarily
-OVERLOAD_NAME(createMemBufInputStreamCopy)	
+OVERLOAD_NAME(createMemBufInputStreamCopy)
 	XmlInputStream* createMemBufInputStream(
 		const char *bytes, const unsigned int count,
 		const bool copyBuffer) const {
@@ -556,14 +560,14 @@ OVERLOAD_NAME(createMemBufInputStreamCopy)
 
 OVERLOAD_NAME(createURLInputStreamWithPublicID)
 	XmlInputStream* createURLInputStream(
-		const std::string &baseId, 
-		const std::string &systemId, 
+		const std::string &baseId,
+		const std::string &systemId,
 		const std::string &publicId) const {
 		return self->createURLInputStream(baseId, systemId, publicId);
 	}
-	
+
 	XmlInputStream* createURLInputStream(
-		const std::string &baseId, 
+		const std::string &baseId,
 		const std::string &systemId) const {
 		return self->createURLInputStream(baseId, systemId);
 	}
@@ -618,7 +622,7 @@ OVERLOAD_NAME(openContainerWithTxnAndFlags)
         }
 OVERLOAD_NAME(openContainerWithType)
 	XmlContainer *openContainer(const std::string &name,
-				    u_int32_t flags, 
+				    u_int32_t flags,
 				    enum XmlContainer::ContainerType type,
 				    int mode = 0) {
 	    return new XmlContainer(self->openContainer(name,
@@ -627,7 +631,7 @@ OVERLOAD_NAME(openContainerWithType)
 OVERLOAD_NAME(openContainerWithTxnAndType)
 	XmlContainer *openContainer(XmlTransaction &txn,
 				    const std::string &name,
-				    u_int32_t flags, 
+				    u_int32_t flags,
 				    enum XmlContainer::ContainerType type,
 				    int mode = 0) {
 	    return new XmlContainer(self->openContainer(txn, name,
@@ -725,19 +729,19 @@ OVERLOAD_NAME(createTransactionFromDbTxn)
 	XmlTransaction *createTransaction(DbTxn *toAdopt) {
 		return new XmlTransaction(self->createTransaction(toAdopt));
         }
-#ifndef SWIGJAVA 
+#ifndef SWIGJAVA
 	XmlTransaction *createTransaction(u_int32_t flags) {
 		return new XmlTransaction(self->createTransaction(flags));
 	}
-	
+
 OVERLOAD_NAME(createTransactionDefaultFlags)
 	XmlTransaction *createTransaction() {
 		return new XmlTransaction(self->createTransaction((u_int32_t)0));
         }
-#endif		
+#endif
 #ifdef SWIGJAVA
           XmlIndexLookup *createIndexLookupInternal(
-#else		
+#else
         XmlIndexLookup *createIndexLookup(
 #endif
 		XmlContainer &cont,
@@ -837,7 +841,7 @@ public:
 	void setHighBound(const XmlValue &value,
 			  enum XmlIndexLookup::Operation op);
 #endif
-#ifndef SWIGJAVA	  
+#ifndef SWIGJAVA
 	const XmlContainer &getContainer() const;
 	void setContainer(XmlContainer &container);
 #else
@@ -885,7 +889,7 @@ public:
 
 	bool addAlias(const std::string &alias);
 	bool removeAlias(const std::string &alias);
-#ifndef SWIGJAVA	
+#ifndef SWIGJAVA
 	XmlManager &getManager();
 #endif
 	const std::string &getName() const;
@@ -900,7 +904,7 @@ public:
 OVERLOAD_NAME(addIndexWithTypes)
 	void addIndex(const std::string &uri, const std::string &name,
 		      enum XmlIndexSpecification::Type indexType,
-		      enum XmlValue::Type syntaxType, 
+		      enum XmlValue::Type syntaxType,
 		      XmlUpdateContext &uc);
 	void deleteIndex(const std::string &uri, const std::string &name,
 			 const std::string &index, XmlUpdateContext &uc);
@@ -923,7 +927,7 @@ OVERLOAD_NAME(addIndexWithTypesAndTxn)
 	void addIndex(XmlTransaction &txn,
 		      const std::string &uri, const std::string &name,
 		      enum XmlIndexSpecification::Type indexType,
-		      enum XmlValue::Type syntaxType, 
+		      enum XmlValue::Type syntaxType,
 		      XmlUpdateContext &uc);
 OVERLOAD_NAME(deleteIndexWithTxn)
 	void deleteIndex(XmlTransaction &txn, const std::string &uri,
@@ -955,7 +959,7 @@ OVERLOAD_NAME(putDocumentAsEventReader)
         std::string putDocument(const std::string &name, XmlEventReader &reader,
 				XmlUpdateContext &context, u_int32_t flags = 0);
 #ifndef SWIGJAVA
-OVERLOAD_NAME(putDocumentAsEventWriter)	
+OVERLOAD_NAME(putDocumentAsEventWriter)
         XmlEventWriter &putDocumentAsEventWriter(XmlDocument &document,
 						 XmlUpdateContext &context,
 						 u_int32_t flags = 0);
@@ -999,7 +1003,7 @@ OVERLOAD_NAME(putDocumentAsEventReaderWithTxn)
 				XmlUpdateContext &context,
 				u_int32_t flags = 0);
 #ifndef SWIGJAVA
-OVERLOAD_NAME(putDocumentAsEventWriterWithTxn)	
+OVERLOAD_NAME(putDocumentAsEventWriterWithTxn)
         XmlEventWriter &putDocumentAsEventWriter(XmlTransaction &txn,
 						 XmlDocument &document,
 						 XmlUpdateContext &context,
@@ -1062,7 +1066,7 @@ OVERLOAD_NAME(getNodeWithFlagsAndTxn)
 				 u_int32_t flags) {
 		return new XmlValue(self->getNode(txn, name, flags));
 	}
-	
+
 OVERLOAD_NAME(getDocumentWithFlags)
 	XmlDocument *getDocument(const std::string &name, u_int32_t flags) {
 		return new XmlDocument(self->getDocument(name, flags));
@@ -1183,8 +1187,8 @@ public:
 	std::string getName() const;
 
 #if !defined(SWIGTCL8) && !defined(SWIGPYTHON) && !defined(SWIGPHP4)
-	/* 
-	 * don't trust conversions with non utf-8 encodings 
+	/*
+	 * don't trust conversions with non utf-8 encodings
 	 * may be able to enable with some extra code/test
 	 * force use of XmlData-based methods
 	 */
@@ -1202,19 +1206,19 @@ OVERLOAD_NAME(setContentWithXmlData)
 	XmlEventReader &getContentAsEventReader() const;
 	void setContentAsEventReader(XmlEventReader &reader);
 	void getContentAsEventWriter(XmlEventWriter &writer);
-	
+
 	void fetchAllData();
 	void setMetaData(const std::string &uri,
 			 const std::string &name, const XmlValue &value);
 	bool getMetaData(const std::string &uri, const std::string &name,
 			 XmlValue &value);
-	void removeMetaData(const std::string &uri, const std::string &name);	
+	void removeMetaData(const std::string &uri, const std::string &name);
 OVERLOAD_NAME(setMetaDataWithXmlData)
 	void setMetaData(const std::string &uri,
-			 const std::string &name, const XmlData &value);	
+			 const std::string &name, const XmlData &value);
 OVERLOAD_NAME(getMetaDataAsXmlData)
 	bool getMetaData(const std::string &uri, const std::string &name,
-			 XmlData &value);	
+			 XmlData &value);
 %extend {
 	std::string getContentAsString() const {
 		std::string s;
@@ -1283,13 +1287,13 @@ public:
 	{
 		LiveValues
 	};
-	
+
 	enum // EvaluationType
 	{
 		Eager,
 		Lazy
 	};
-	
+
 	/// Constructor.
 	XmlQueryContext();
 	XmlQueryContext(const XmlQueryContext &o);
@@ -1351,12 +1355,12 @@ public:
 		XmlValue value;
 		return self->getVariableValue(name, value) ? value.asString() : "";
 	}
-	
+
 	void set(const std::string &name, const std::string &value) {
 		XmlValue xval(value);
 		self->setVariableValue(name, xval);
 	}
-	
+
 	void setDebugVariable(const std::string &var) {
 		self->setVariableValue("dbxml:debug", var);
 	}
@@ -1377,7 +1381,7 @@ public:
 	bool hasNext();
 	bool hasPrevious();
 	bool isNull() const;
-#if defined(SWIGPYTHON) || defined(SWIGPHP4)
+#if defined(SWIGPYTHON) || defined(SWIGPHP4) || defined(SWIGRUBY)
 %extend {
 	XmlValue *next() {
 		XmlValue *value = new XmlValue;
@@ -1599,7 +1603,7 @@ OVERLOAD_NAME(XmlValueTypedFromXmlData)
 
 class XmlIndexSpecification {
 public:
-	enum //Type 
+	enum //Type
 	{
 		UNIQUE_OFF = 0x00000000,
 		UNIQUE_ON = 0x10000000,
@@ -1638,7 +1642,7 @@ OVERLOAD_NAME(deleteIndexAsString)
 	void replaceIndex(const std::string &uri, const std::string &name,
 		      enum XmlIndexSpecification::Type type,
 		      enum XmlValue::Type syntax);
-OVERLOAD_NAME(replaceIndexAsString)	
+OVERLOAD_NAME(replaceIndexAsString)
 	void replaceIndex(const std::string &uri, const std::string &name,
 			  const std::string &index);
 
@@ -1652,7 +1656,7 @@ OVERLOAD_NAME(deleteDefaultIndexAsString)
 	void deleteDefaultIndex(const std::string &index);
 	void replaceDefaultIndex(enum XmlIndexSpecification::Type type,
 				 enum XmlValue::Type syntax);
-OVERLOAD_NAME(replaceDefaultIndexAsString)	
+OVERLOAD_NAME(replaceDefaultIndexAsString)
 	void replaceDefaultIndex(const std::string &index);
 
 	void reset();
@@ -1669,7 +1673,7 @@ OVERLOAD_NAME(replaceDefaultIndexAsString)
 			return NULL;
 		}
 	}
-	
+
 	XmlIndexDeclaration *next() {
 		XmlIndexDeclaration *idecl = new XmlIndexDeclaration;
 		if (self->next(idecl->uri, idecl->name, idecl->index))
@@ -1872,7 +1876,7 @@ public:
 
 	void abort();
 	void commit(u_int32_t flags);
-	
+
 %extend {
 	XmlTransaction *createChild(u_int32_t flags = 0) {
 		return new XmlTransaction(self->createChild(flags));
@@ -1884,7 +1888,7 @@ OVERLOAD_NAME(commitDefaultFlags)
 }
 
 	DbTxn *getDbTxn();
-#endif // !SWIGJAVA	
+#endif // !SWIGJAVA
 };
 
 class XmlStatistics
@@ -1971,7 +1975,7 @@ public:
 	bool isStandalone() const;
 	bool standaloneSet() const;
 	bool encodingSet() const;
-	
+
 	bool hasEntityEscapeInfo() const;
 	bool needsEntityEscape(int index = 0) const;
 	bool hasEmptyElementInfo() const;
@@ -2007,7 +2011,7 @@ public:
 // There is a problem with the Tcl overload here...
 #if defined(DBXML_USEOVERLOADS) && !defined(SWIGTCL8)
 	// Add no-length overloads
-%extend {	
+%extend {
 	void writeText(enum XmlEventReader::XmlEventType type,
 		       const unsigned char *text) {
 		self->writeText(type, text, 0);
@@ -2015,11 +2019,11 @@ public:
 	void writeDTD(const unsigned char *dtd) {
 		self->writeDTD(dtd, 0);
 	}
-}	
+}
 #endif
 	void writeProcessingInstruction(const unsigned char *target,
 					const unsigned char *data);
-	
+
 	void writeStartElement(const unsigned char *localName,
 			       const unsigned char *prefix,
 			       const unsigned char *uri,
@@ -2028,12 +2032,12 @@ public:
 	void writeEndElement(const unsigned char *localName,
 			     const unsigned char *prefix,
 			     const unsigned char *uri);
-	
+
 	void writeStartDocument(const unsigned char *version,
 				const unsigned char *encoding,
 				const unsigned char *standalone);
 	void writeEndDocument();
-	
+
 	void writeStartEntity(const unsigned char *name,
 			      bool expandedInfoFollows);
 	void writeEndEntity(const unsigned char *name);

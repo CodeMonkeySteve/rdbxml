@@ -29,16 +29,11 @@ Rake::TestTask.new do |t|
   CLEAN.include 'test/test_*.db'
 end
 
-spec = Gem::Specification.load 'rdbxml.gemspec'
-Rake::GemPackageTask.new spec  do |pkg|
-  pkg.need_zip = pkg.need_tar = true
-end
-
-task :default =>  [ :extensions, :test, :clean ]
-
-if File.exist? 'publish.rake'
-  load 'publish.rake'
-  task :cruise => :publish
+if File.exist? 'rdbxml.gemspec'
+  spec = Gem::Specification.load 'rdbxml.gemspec'
+  Rake::GemPackageTask.new spec  do |pkg|
+    pkg.need_zip = pkg.need_tar = true
+  end
 end
 
 # docs = Rake::RDocTask.new :rdoc do |rdoc|
@@ -50,4 +45,10 @@ end
 #   rdoc.rdoc_files.include 'docs/**/*.rb', 'docs/**/*.rdoc'
 #   rdoc.rdoc_files.include 'rake/**/*task.rb'
 # end
+# if File.exist? 'publish.rake'
+#   load 'publish.rake'
+#   task :cruise => :publish
+# end
+
+task :default =>  [ :extensions, :test, :clean ]
 

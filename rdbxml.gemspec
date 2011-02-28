@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.authors = [ 'Steve Sloan' ]
   s.email = 'steve@finagle.org'
-  s.homepage = 'http://rdbxml.rubyforge.org/'
+  s.homepage = 'http://github.com/CodeMonkeySteve/rdbxml'
   s.summary = 'Ruby interface to the Berkeley DB XML database'
   s.description = 'Provides wrappers for the Oracle Berkeley DB XML C++ API, plus pure Ruby extensions'
 #  s.date = '2009-04-10'
@@ -28,7 +28,6 @@ Gem::Specification.new do |s|
   s.rdoc_options = %w| --line-numbers --inline-source --main README.rdoc --exclude ext/*.c* |
   s.extra_rdoc_files = %w| README.rdoc |
 
-  s.rubyforge_project = s.name
 #  s.rubygems_version = %q{1.3.0}
 
   if s.respond_to? :specification_version then

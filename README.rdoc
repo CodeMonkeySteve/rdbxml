@@ -27,7 +27,6 @@ DB XML (Dbxml) and as well as pure-Ruby convenience functions (RDBXML).
   puts docs['Document Name'].to_s
 
 Author::    Steve Sloan (mailto:steve@finagle.org)
-Website::   http://rdbxml.rubyforge.org
-Rubyforge:: http://rubyforge.org/projects/rdbxml
+Website::   http://github.com/CodeMonkeySteve/rdbxml
 Copyright:: Copyright (c) 2006-2009 Steve Sloan
 License::   MIT
